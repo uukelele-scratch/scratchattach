@@ -365,6 +365,7 @@ class BaseCloud(AnyCloud[Union[str, int]]):
         self._assert_valid_value(value)
         if not isinstance(variable, str):
             raise ValueError("cloud var name must be a string")
+        variable = variable.removeprefix("☁ ")
         if not self.active_connection:
             self.connect()
         self._enforce_ratelimit(n=1)
@@ -401,6 +402,7 @@ class BaseCloud(AnyCloud[Union[str, int]]):
         packet_list = []
         for variable in var_value_dict:
             value = var_value_dict[variable]
+            variable = variable.removeprefix("☁ ")
             self._assert_valid_value(value)
             if not isinstance(variable, str):
                 raise ValueError("cloud var name must be a string")
@@ -416,6 +418,7 @@ class BaseCloud(AnyCloud[Union[str, int]]):
         self.last_var_set = time.time()
 
     def get_var(self, var, *, recorder_initial_values={}):
+        var = "☁ "+var.removeprefix("☁ ")
         if self.recorder is None:
             self.recorder = cloud_recorder.CloudRecorder(self, initial_values=recorder_initial_values)
             self.recorder.start()
